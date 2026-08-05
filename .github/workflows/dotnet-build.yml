@@ -29,3 +29,35 @@ jobs:
 
     - name: Publish application
       run: dotnet publish --configuration Release -o publish
+
+
+    - name: Deploy to IIS
+      shell: powershell
+      run: |
+
+        Import-Module WebAdministration
+
+        $iisPath = "C:\inetpub\wwwroot\ToDo API"
+        $appPool = "ToDo Api-Pool"
+
+        Write-Host "Stopping IIS App Pool..."
+
+        Stop-WebAppPool -Name $appPool
+
+
+        Write-Host "Cleaning old deployment files..."
+
+        Remove-Item "$iisPath\*" -Recurse -Force
+
+
+        Write-Host "Copying new publish files..."
+
+        Copy-Item ".\publish\*" $iisPath -Recurse -Force
+
+
+        Write-Host "Starting IIS App Pool..."
+
+        Start-WebAppPool -Name $appPool
+
+
+        Write-Host "Deployment completed successfully"
