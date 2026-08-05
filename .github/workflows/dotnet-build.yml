@@ -8,17 +8,18 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
-    
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+
     steps:
 
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
+    - name: Check .NET Version
+      run: dotnet --version
 
     - name: Restore dependencies
       run: dotnet restore
@@ -27,4 +28,4 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Publish application
-      run: dotnet publish --configuration Release -o C:\inetpub\wwwroot\ToDo API
+      run: dotnet publish --configuration Release -o publish
